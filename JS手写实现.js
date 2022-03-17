@@ -116,7 +116,6 @@ function throttle(fn, delay) {
 // 节流 Date版
 const throttleByDate = function (fn, delay) {
     let startTime = Date.now()
-
     return function (...args) {
         let lastTime = Date.now()
 
@@ -221,4 +220,18 @@ function myNew(fn, ...args){
     // 这两步可以简化为 Object.create(fn.prototype);
     let result = fn.call(obj, args);//绑定this  传入参数
     return result instanceof Object ? result : obj;
+}
+
+// setTimeout实现setInterval
+function interval(func, delay){
+    let timer = null;
+    let interFunc = function(){
+        func.call(null);
+        timer = setTimeout(interFunc, delay) // 递归调用
+    }
+    timer = setTimeout(interFunc, delay) // 触发递归
+    function clearInterval(){
+        clearTimeout(timer);
+    }
+    return clearInterval;
 }
